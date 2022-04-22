@@ -21,9 +21,7 @@ package console
 
 import (
 	"flag"
-	"os"
-	"reflect"
-	"strings"
+	"fmt"
 )
 
 // Context is a type that is passed through to
@@ -46,7 +44,11 @@ func NewContext(app *Application, set *flag.FlagSet, parentCtx *Context) *Contex
 
 // Set assigns a value to a context flag.
 func (c *Context) Set(name, value string) error {
-	return c.flagSet.Set(name, value)
+	if fs := lookupFlagSet(name, c); fs != nil {
+		return fs.Set(name, value)
+	}
+
+	return fmt.Errorf("no such flag -%v", name)
 }
 
 // IsSet determines if the flag was actually set
@@ -60,39 +62,6 @@ func (c *Context) IsSet(name string) bool {
 		})
 		if isSet {
 			return true
-		}
-	}
-
-	// XXX hack to support IsSet for flags with EnvVar
-	//
-	// There isn't an easy way to do this with the current implementation since
-	// whether a flag was set via an environment variable is very difficult to
-	// determine here. Instead, we intend to introduce a backwards incompatible
-	// change in version 2 to add `IsSet` to the Flag interface to push the
-	// responsibility closer to where the information required to determine
-	// whether a flag is set by non-standard means such as environment
-	// variables is available.
-	//
-	// See https://github.com/urfave/cli/issues/294 for additional discussion
-	f := lookupFlag(name, c)
-	if f == nil {
-		return false
-	}
-
-	val := reflect.ValueOf(f)
-	if val.Kind() == reflect.Ptr {
-		val = val.Elem()
-	}
-
-	envVarValues := val.FieldByName("EnvVars")
-	if !envVarValues.IsValid() {
-		return false
-	}
-
-	for _, envVar := range envVarValues.Interface().([]string) {
-		envVar = strings.TrimSpace(envVar)
-		if envVal := os.Getenv(envVar); envVal != "" {
-			continue
 		}
 	}
 

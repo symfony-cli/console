@@ -23,6 +23,7 @@ import (
 	"flag"
 	"time"
 
+	"github.com/symfony-cli/terminal"
 	. "gopkg.in/check.v1"
 )
 
@@ -220,6 +221,25 @@ func (cs *ContextSuite) TestContext_Set(c *C) {
 
 	ctx.Set("int", "1")
 	c.Assert(ctx.Int("int"), Equals, 1)
+}
+
+func (cs *ContextSuite) TestContext_Set_AppFlags(c *C) {
+	defer terminal.SetLogLevel(1)
+
+	app := &Application{
+		Commands: []*Command{
+			&Command{
+				Name: "foo",
+				Action: func(ctx *Context) error {
+					err := ctx.Set("log-level", "4")
+					c.Assert(err, IsNil)
+
+					return nil
+				},
+			},
+		},
+	}
+	app.Run([]string{"cmd", "foo"})
 }
 
 func (cs *ContextSuite) TestContext_Lineage(c *C) {
