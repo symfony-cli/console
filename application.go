@@ -118,7 +118,7 @@ func (a *Application) Run(arguments []string) (err error) {
 	args := context.Args()
 	if args.Present() {
 		name := args.first()
-		context.Command = a.Command(name)
+		context.Command = a.BestCommand(name)
 	}
 
 	if a.Before != nil {
@@ -154,12 +154,25 @@ func (a *Application) Run(arguments []string) (err error) {
 
 // Command returns the named command on App. Returns nil if the command does not exist
 func (a *Application) Command(name string) *Command {
-	var matches []*Command
 	for _, c := range a.Commands {
 		if c.HasName(name, true) {
 			c.UserName = name
 			return c
 		}
+	}
+	return nil
+}
+
+// BestCommand returns the named command on App or there is exactly one command the fuzzy matches.
+// Returns nil if the command does not exist
+func (a *Application) BestCommand(name string) *Command {
+	if c := a.Command(name); c != nil {
+		return c
+	}
+
+	// fuzzy match?
+	var matches []*Command
+	for _, c := range a.Commands {
 		if c.HasName(name, false) {
 			matches = append(matches, c)
 		}
