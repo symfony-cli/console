@@ -121,28 +121,28 @@ func TestFuzzyCommandNames(t *testing.T) {
 		projectLink,
 	}
 
-	c := app.Command("project:list")
+	c := app.BestCommand("project:list")
 	if c != projectList {
-		t.Fatalf("expected project:list, got %s", c.Name)
+		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.Command("project:link")
+	c = app.BestCommand("project:link")
 	if c != projectLink {
-		t.Fatalf("expected project:link, got %s", c.Name)
+		t.Fatalf("expected project:link, got %v", c)
 	}
-	c = app.Command("pro:list")
+	c = app.BestCommand("pro:list")
 	if c != projectList {
-		t.Fatalf("expected project:list, got %s", c.Name)
+		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.Command("pro:lis")
+	c = app.BestCommand("pro:lis")
 	if c != projectList {
-		t.Fatalf("expected project:list, got %s", c.Name)
+		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.Command("p:lis")
+	c = app.BestCommand("p:lis")
 	if c != projectList {
-		t.Fatalf("expected project:list, got %s", c.Name)
+		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.Command("p:li")
+	c = app.BestCommand("p:li")
 	if c != nil {
-		t.Fatalf("expected no matches, got %s", c.Name)
+		t.Fatalf("expected no matches, got %v", c)
 	}
 }

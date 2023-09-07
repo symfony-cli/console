@@ -152,7 +152,8 @@ func (a *Application) Run(arguments []string) (err error) {
 	return err
 }
 
-// Command returns the named command on App. Returns nil if the command does not exist
+// Command returns the named command on App. Returns nil if the command does not
+// exist
 func (a *Application) Command(name string) *Command {
 	for _, c := range a.Commands {
 		if c.HasName(name, true) {
@@ -163,8 +164,9 @@ func (a *Application) Command(name string) *Command {
 	return nil
 }
 
-// BestCommand returns the named command on App or there is exactly one command the fuzzy matches.
-// Returns nil if the command does not exist
+// BestCommand returns the named command on App or a command fuzzy matching if
+// there is only one. Returns nil if the command does not exist of if the fuzzy
+// matching find more than one.
 func (a *Application) BestCommand(name string) *Command {
 	if c := a.Command(name); c != nil {
 		return c
