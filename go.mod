@@ -3,7 +3,7 @@ module github.com/symfony-cli/console
 go 1.17
 
 require (
-	github.com/ferhatelmas/levenshtein v0.0.0-20160518143259-a12aecc52d76
+	github.com/agext/levenshtein v1.2.3
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.26.0
