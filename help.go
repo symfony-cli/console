@@ -27,7 +27,7 @@ import (
 	"text/tabwriter"
 	"text/template"
 
-	"github.com/ferhatelmas/levenshtein"
+	"github.com/agext/levenshtein"
 	"github.com/rs/zerolog"
 )
 
@@ -208,7 +208,7 @@ func findAlternatives(name string, commands []*Command) []string {
 				continue
 			}
 
-			lev := levenshtein.Dist(name, command.Category)
+			lev := levenshtein.Distance(name, command.Category, nil)
 			if lev <= len(name)/3 {
 				alternatives = append(alternatives, command.FullName())
 				continue
@@ -225,7 +225,7 @@ func findAlternatives(name string, commands []*Command) []string {
 				continue
 			}
 
-			lev := levenshtein.Dist(name, cmdName)
+			lev := levenshtein.Distance(name, cmdName, nil)
 			if lev <= len(name)/3 {
 				alternatives = append(alternatives, cmdName)
 				continue

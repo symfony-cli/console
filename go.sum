@@ -1,6 +1,6 @@
+github.com/agext/levenshtein v1.2.3 h1:YB2fHEn0UJagG8T1rrWknE3ZQzWM06O8AMAatNn7lmo=
+github.com/agext/levenshtein v1.2.3/go.mod h1:JEDfjyjHDjOF/1e4FlBE/PkbqA9OfWu2ki2W0IB5558=
 github.com/coreos/go-systemd/v22 v22.3.2/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
-github.com/ferhatelmas/levenshtein v0.0.0-20160518143259-a12aecc52d76 h1:R2K7yLHPmwoTdmNuQ5Wfm0/evh/+QFdoI6EbW3OSMKw=
-github.com/ferhatelmas/levenshtein v0.0.0-20160518143259-a12aecc52d76/go.mod h1:jr1MMO0KsDD+PQ57K7oJGk97TLYtbhLUOjCS577Ddm4=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/kr/pretty v0.2.1 h1:Fmg33tUaq4/8ym9TJN1x7sLJnHVwhP33CNkpYV/7rwI=
 github.com/kr/pretty v0.2.1/go.mod h1:ipq/a2n7PKx3OHsz4KJII5eveXtPO4qwEXGdVfWzfnI=
