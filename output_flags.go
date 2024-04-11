@@ -95,6 +95,10 @@ func (f *quietFlag) ForApp(app *Application) *quietFlag {
 	}
 }
 
+func (f *quietFlag) PredictArgs(*Context, string) []string {
+	return []string{"true", "false", ""}
+}
+
 func (f *quietFlag) Validate(c *Context) error {
 	return nil
 }
@@ -129,6 +133,12 @@ var (
 )
 
 func (app *Application) configureIO(c *Context) {
+	if IsAutocomplete(c.Command) {
+		terminal.DefaultStdout.SetDecorated(false)
+		terminal.Stdin.SetInteractive(false)
+		return
+	}
+
 	if c.IsSet(AnsiFlag.Name) {
 		terminal.DefaultStdout.SetDecorated(c.Bool(AnsiFlag.Name))
 	} else if c.IsSet(NoAnsiFlag.Name) {

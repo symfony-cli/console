@@ -22,29 +22,15 @@ package console
 import (
 	"os"
 	"path/filepath"
-
-	"github.com/pkg/errors"
+	"strings"
 )
 
-func CurrentBinaryName() string {
-	argv0, err := os.Executable()
-	if nil != err {
-		return ""
-	}
+func IsGoRun() bool {
+	// Unfortunately, Golang does not expose that we are currently using go run
+	// So we detect the main binary is (or used to be ;)) "go" and then the
+	// current binary is within a temp "go-build" directory.
+	_, exe := filepath.Split(os.Getenv("_"))
+	argv0, _ := os.Executable()
 
-	return filepath.Base(argv0)
-}
-
-func CurrentBinaryPath() (string, error) {
-	argv0, err := os.Executable()
-	if nil != err {
-		return argv0, errors.WithStack(err)
-	}
-	return argv0, nil
-}
-
-func (c *Context) CurrentBinaryPath() string {
-	path, _ := CurrentBinaryPath()
-
-	return path
+	return exe == "go" && strings.Contains(argv0, "go-build")
 }

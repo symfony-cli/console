@@ -19,6 +19,9 @@
 
 package console
 
+// ShellCompleteFunc is an action to execute when the shell completion flag is set
+type ShellCompleteFunc func(*Context, string) []string
+
 // BeforeFunc is an action to execute before any subcommands are run, but after
 // the context is ready if a non-nil error is returned, no subcommands are run
 type BeforeFunc func(*Context) error
