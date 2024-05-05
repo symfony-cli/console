@@ -25,7 +25,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"reflect"
 	"strings"
@@ -68,7 +67,7 @@ var (
 
 func init() {
 	OsExiter = fakeOsExiter
-	terminal.Stdout = terminal.NewBufferedConsoleOutput(ioutil.Discard, ioutil.Discard)
+	terminal.Stdout = terminal.NewBufferedConsoleOutput(io.Discard, io.Discard)
 	terminal.Stderr = terminal.Stdout.Stderr
 }
 
@@ -765,7 +764,7 @@ func TestAppNoHelpFlag(t *testing.T) {
 
 	HelpFlag = nil
 
-	app := &Application{Writer: ioutil.Discard}
+	app := &Application{Writer: io.Discard}
 	err := app.Run([]string{"test", "-h"})
 
 	if !strings.Contains(err.Error(), flag.ErrHelp.Error()) {

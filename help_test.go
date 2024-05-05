@@ -22,7 +22,7 @@ package console
 import (
 	"bytes"
 	"flag"
-	"io/ioutil"
+	"io"
 	"strings"
 	"testing"
 )
@@ -119,7 +119,7 @@ func Test_Version_Custom_Flags(t *testing.T) {
 
 func Test_helpCommand_Action_ErrorIfNoTopic(t *testing.T) {
 	app := &Application{}
-	app.Writer, app.ErrWriter = ioutil.Discard, ioutil.Discard
+	app.Writer, app.ErrWriter = io.Discard, io.Discard
 
 	set := flag.NewFlagSet("test", 0)
 	set.Parse([]string{"foo"})

@@ -22,7 +22,7 @@ package console
 import (
 	"errors"
 	"flag"
-	"io/ioutil"
+	"io"
 	"strings"
 	"testing"
 
@@ -113,7 +113,7 @@ func TestCommand_Run_DoesNotOverwriteErrorFromBefore(t *testing.T) {
 
 func TestFuzzyCommandNames(t *testing.T) {
 	app := Application{}
-	app.ErrWriter = ioutil.Discard
+	app.ErrWriter = io.Discard
 	projectList := &Command{Name: "project:list"}
 	projectLink := &Command{Name: "project:link"}
 	app.Commands = []*Command{

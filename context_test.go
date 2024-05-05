@@ -228,7 +228,7 @@ func (cs *ContextSuite) TestContext_Set_AppFlags(c *C) {
 
 	app := &Application{
 		Commands: []*Command{
-			&Command{
+			{
 				Name: "foo",
 				Action: func(ctx *Context) error {
 					err := ctx.Set("log-level", "4")
