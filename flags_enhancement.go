@@ -22,7 +22,7 @@ package console
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"reflect"
 	"strings"
@@ -99,7 +99,7 @@ func (c *Command) fixArgs(args []string) []string {
 }
 
 func parseArgs(arguments []string, fs *flag.FlagSet) (*flag.FlagSet, error) {
-	fs.SetOutput(ioutil.Discard)
+	fs.SetOutput(io.Discard)
 	err := errors.WithStack(fs.Parse(arguments))
 	if err != nil {
 		return fs, err

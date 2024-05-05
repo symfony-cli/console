@@ -21,7 +21,7 @@ package console
 
 import (
 	"flag"
-	"io/ioutil"
+	"io"
 	"os"
 	"strconv"
 
@@ -39,7 +39,7 @@ func (r *quietValue) Set(s string) error {
 		return errors.WithStack(err)
 	}
 	if quiet {
-		terminal.Stdout = terminal.NewBufferedConsoleOutput(ioutil.Discard, ioutil.Discard)
+		terminal.Stdout = terminal.NewBufferedConsoleOutput(io.Discard, io.Discard)
 	} else {
 		terminal.Stdout = terminal.DefaultStdout
 	}
