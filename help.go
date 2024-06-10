@@ -149,6 +149,10 @@ func ShowAppHelp(c *Context) error {
 // ShowCommandHelp prints help for the given command
 func ShowCommandHelp(ctx *Context, command string) error {
 	if c := ctx.App.Command(command); c != nil {
+		if c.DescriptionFunc != nil {
+			c.Description = c.DescriptionFunc(c, ctx.App)
+		}
+
 		HelpPrinter(ctx.App.Writer, CommandHelpTemplate, c)
 		return nil
 	}

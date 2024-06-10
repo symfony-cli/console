@@ -237,6 +237,31 @@ func TestShowCommandHelp_CommandAliases(t *testing.T) {
 	}
 }
 
+func TestShowCommandHelp_DescriptionFunc(t *testing.T) {
+	app := &Application{
+		Commands: []*Command{
+			{
+				Name:        "frobbly",
+				Description: "this is not my custom description",
+				DescriptionFunc: func(*Command, *Application) string {
+					return "this is my custom description"
+				},
+				Action: func(ctx *Context) error {
+					return nil
+				},
+			},
+		},
+	}
+
+	output := &bytes.Buffer{}
+	app.Writer = output
+	app.Run([]string{"foo", "help", "frobbly"})
+
+	if !strings.Contains(output.String(), "this is my custom description") {
+		t.Errorf("expected output to include result of DescriptionFunc; got: %q", output.String())
+	}
+}
+
 func TestShowAppHelp_HiddenCommand(t *testing.T) {
 	app := &Application{
 		Commands: []*Command{
