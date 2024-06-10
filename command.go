@@ -44,6 +44,8 @@ type Command struct {
 	Usage string
 	// A longer explanation of how the command works
 	Description string
+	// or a function responsible to render the description
+	DescriptionFunc DescriptionFunc
 	// The category the command is part of
 	Category string
 	// An action to execute before any sub-subcommands are run, but after the context is ready

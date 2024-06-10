@@ -33,6 +33,10 @@ type ActionFunc func(*Context) error
 // CommandNotFoundFunc is executed if the proper command cannot be found
 type CommandNotFoundFunc func(*Context, string) error
 
+// DescriptionFunc is used by the help generation to display a description when
+// its computation is intensive or needs runtime information
+type DescriptionFunc func(*Command, *Application) string
+
 // FlagStringFunc is used by the help generation to display a flag, which is
 // expected to be a single line.
 type FlagStringFunc func(Flag) string
