@@ -28,7 +28,7 @@
 # versions are used)
 _{{ .App.HelpName }}_console() {
   # shellcheck disable=SC2068
-  {{ .CurrentBinaryPath }} console $@
+  {{ .CurrentBinaryInvocation }} console $@
 }
 
 _complete_{{ .App.HelpName }}() {

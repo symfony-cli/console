@@ -27,14 +27,14 @@ function __complete_{{ .App.HelpName }}
     set -lx COMP_LINE (commandline -cp)
     test -z (commandline -ct)
     and set COMP_LINE "$COMP_LINE "
-    {{ .CurrentBinaryPath }} self:autocomplete
+    {{ .CurrentBinaryInvocation }} self:autocomplete
 end
 
 # this wrapper function allows us to call Symfony autocompletion letting it
 # knows how to call the `bin/console` using the Symfony CLI binary (to ensure
 # the right env and PHP versions are used)
 function __complete_{{ .App.HelpName }}_console
-    set -x _SF_CMD "{{ .CurrentBinaryPath }}" "console"
+    set -x _SF_CMD "{{ .CurrentBinaryInvocation }}" "console"
     _sf_console
 end
 

@@ -43,8 +43,28 @@ func CurrentBinaryPath() (string, error) {
 	return argv0, nil
 }
 
+func CurrentBinaryInvocation() (string, error) {
+	if len(os.Args) == 0 || os.Args[0] == "" {
+		return "", errors.New("no binary invokation found")
+	}
+
+	return os.Args[0], nil
+}
+
 func (c *Context) CurrentBinaryPath() string {
-	path, _ := CurrentBinaryPath()
+	path, err := CurrentBinaryPath()
+	if err != nil {
+		panic(err)
+	}
 
 	return path
+}
+
+func (c *Context) CurrentBinaryInvocation() string {
+	invocation, err := CurrentBinaryInvocation()
+	if err != nil {
+		panic(err)
+	}
+
+	return invocation
 }
