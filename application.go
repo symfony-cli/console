@@ -312,6 +312,8 @@ func (a *Application) setup() {
 		a.prependFlag(HelpFlag)
 	}
 
+	registerAutocompleteCommands(a)
+
 	for _, c := range a.Commands {
 		if c.HelpName == "" {
 			c.HelpName = fmt.Sprintf("%s %s", a.HelpName, c.FullName())

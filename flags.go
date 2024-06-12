@@ -27,22 +27,30 @@ import (
 
 // BoolFlag is a flag with type bool
 type BoolFlag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue bool
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, bool) error
-	Destination  *bool
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, bool) error
+	Destination   *bool
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *BoolFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *BoolFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{"true", "false"}
 }
 
 func (f *BoolFlag) Validate(c *Context) error {
@@ -80,22 +88,30 @@ func lookupBool(name string, f *flag.Flag) bool {
 
 // DurationFlag is a flag with type time.Duration (see https://golang.org/pkg/time/#ParseDuration)
 type DurationFlag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue time.Duration
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, time.Duration) error
-	Destination  *time.Duration
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  time.Duration
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, time.Duration) error
+	Destination   *time.Duration
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *DurationFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *DurationFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *DurationFlag) Validate(c *Context) error {
@@ -133,22 +149,30 @@ func lookupDuration(name string, f *flag.Flag) time.Duration {
 
 // Float64Flag is a flag with type float64
 type Float64Flag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue float64
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, float64) error
-	Destination  *float64
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  float64
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, float64) error
+	Destination   *float64
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *Float64Flag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *Float64Flag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *Float64Flag) Validate(c *Context) error {
@@ -186,21 +210,29 @@ func lookupFloat64(name string, f *flag.Flag) float64 {
 
 // GenericFlag is a flag with type Generic
 type GenericFlag struct {
-	Name        string
-	Aliases     []string
-	Usage       string
-	EnvVars     []string
-	Hidden      bool
-	DefaultText string
-	Required    bool
-	Validator   func(*Context, interface{}) error
-	Destination Generic
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, interface{}) error
+	Destination   Generic
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *GenericFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *GenericFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *GenericFlag) Validate(c *Context) error {
@@ -238,22 +270,30 @@ func lookupGeneric(name string, f *flag.Flag) interface{} {
 
 // Int64Flag is a flag with type int64
 type Int64Flag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue int64
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, int64) error
-	Destination  *int64
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  int64
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, int64) error
+	Destination   *int64
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *Int64Flag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *Int64Flag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *Int64Flag) Validate(c *Context) error {
@@ -291,22 +331,30 @@ func lookupInt64(name string, f *flag.Flag) int64 {
 
 // IntFlag is a flag with type int
 type IntFlag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue int
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, int) error
-	Destination  *int
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  int
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, int) error
+	Destination   *int
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *IntFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *IntFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *IntFlag) Validate(c *Context) error {
@@ -344,21 +392,29 @@ func lookupInt(name string, f *flag.Flag) int {
 
 // IntSliceFlag is a flag with type *IntSlice
 type IntSliceFlag struct {
-	Name        string
-	Aliases     []string
-	Usage       string
-	EnvVars     []string
-	Hidden      bool
-	DefaultText string
-	Required    bool
-	Validator   func(*Context, []int) error
-	Destination *IntSlice
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, []int) error
+	Destination   *IntSlice
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *IntSliceFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *IntSliceFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *IntSliceFlag) Validate(c *Context) error {
@@ -398,21 +454,29 @@ func lookupIntSlice(name string, f *flag.Flag) []int {
 
 // Int64SliceFlag is a flag with type *Int64Slice
 type Int64SliceFlag struct {
-	Name        string
-	Aliases     []string
-	Usage       string
-	EnvVars     []string
-	Hidden      bool
-	DefaultText string
-	Required    bool
-	Validator   func(*Context, []int64) error
-	Destination *Int64Slice
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, []int64) error
+	Destination   *Int64Slice
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *Int64SliceFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *Int64SliceFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *Int64SliceFlag) Validate(c *Context) error {
@@ -452,21 +516,29 @@ func lookupInt64Slice(name string, f *flag.Flag) []int64 {
 
 // Float64SliceFlag is a flag with type *Float64Slice
 type Float64SliceFlag struct {
-	Name        string
-	Aliases     []string
-	Usage       string
-	EnvVars     []string
-	Hidden      bool
-	DefaultText string
-	Required    bool
-	Validator   func(*Context, []float64) error
-	Destination *Float64Slice
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, []float64) error
+	Destination   *Float64Slice
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *Float64SliceFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *Float64SliceFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *Float64SliceFlag) Validate(c *Context) error {
@@ -506,22 +578,30 @@ func lookupFloat64Slice(name string, f *flag.Flag) []float64 {
 
 // StringFlag is a flag with type string
 type StringFlag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue string
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, string) error
-	Destination  *string
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  string
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, string) error
+	Destination   *string
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *StringFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *StringFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *StringFlag) Validate(c *Context) error {
@@ -559,21 +639,29 @@ func lookupString(name string, f *flag.Flag) string {
 
 // StringSliceFlag is a flag with type *StringSlice
 type StringSliceFlag struct {
-	Name        string
-	Aliases     []string
-	Usage       string
-	EnvVars     []string
-	Hidden      bool
-	DefaultText string
-	Required    bool
-	Validator   func(*Context, []string) error
-	Destination *StringSlice
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, []string) error
+	Destination   *StringSlice
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *StringSliceFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *StringSliceFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *StringSliceFlag) Validate(c *Context) error {
@@ -613,21 +701,29 @@ func lookupStringSlice(name string, f *flag.Flag) []string {
 
 // StringMapFlag is a flag with type *StringMap
 type StringMapFlag struct {
-	Name        string
-	Aliases     []string
-	Usage       string
-	EnvVars     []string
-	Hidden      bool
-	DefaultText string
-	Required    bool
-	Validator   func(*Context, map[string]string) error
-	Destination *StringMap
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, map[string]string) error
+	Destination   *StringMap
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *StringMapFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *StringMapFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *StringMapFlag) Validate(c *Context) error {
@@ -667,22 +763,30 @@ func lookupStringMap(name string, f *flag.Flag) map[string]string {
 
 // Uint64Flag is a flag with type uint64
 type Uint64Flag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue uint64
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, uint64) error
-	Destination  *uint64
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  uint64
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, uint64) error
+	Destination   *uint64
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *Uint64Flag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *Uint64Flag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *Uint64Flag) Validate(c *Context) error {
@@ -720,22 +824,30 @@ func lookupUint64(name string, f *flag.Flag) uint64 {
 
 // UintFlag is a flag with type uint
 type UintFlag struct {
-	Name         string
-	Aliases      []string
-	Usage        string
-	EnvVars      []string
-	Hidden       bool
-	DefaultValue uint
-	DefaultText  string
-	Required     bool
-	Validator    func(*Context, uint) error
-	Destination  *uint
+	Name          string
+	Aliases       []string
+	Usage         string
+	EnvVars       []string
+	Hidden        bool
+	DefaultValue  uint
+	DefaultText   string
+	Required      bool
+	ArgsPredictor func(*Context, string) []string
+	Validator     func(*Context, uint) error
+	Destination   *uint
 }
 
 // String returns a readable representation of this value
 // (for usage defaults)
 func (f *UintFlag) String() string {
 	return FlagStringer(f)
+}
+
+func (f *UintFlag) PredictArgs(c *Context, prefix string) []string {
+	if f.ArgsPredictor != nil {
+		return f.ArgsPredictor(c, prefix)
+	}
+	return []string{}
 }
 
 func (f *UintFlag) Validate(c *Context) error {
