@@ -26,6 +26,7 @@ import (
 	"strconv"
 
 	"github.com/pkg/errors"
+	"github.com/posener/complete"
 	"github.com/symfony-cli/terminal"
 )
 
@@ -95,7 +96,7 @@ func (f *quietFlag) ForApp(app *Application) *quietFlag {
 	}
 }
 
-func (f *quietFlag) PredictArgs(*Context, string) []string {
+func (f *quietFlag) PredictArgs(c *Context, a complete.Args) []string {
 	return []string{"true", "false", ""}
 }
 

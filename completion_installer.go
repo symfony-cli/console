@@ -12,6 +12,7 @@ import (
 	"text/template"
 
 	"github.com/pkg/errors"
+	"github.com/posener/complete"
 	"github.com/symfony-cli/terminal"
 )
 
@@ -27,7 +28,7 @@ var shellAutoCompleteInstallCommand = &Command{
 		{Name: "completion"},
 	},
 	Usage: "Dumps the completion script for the current shell",
-	ShellComplete: func(*Context, string) []string {
+	ShellComplete: func(context *Context, c complete.Args) []string {
 		return []string{"bash", "zsh", "fish"}
 	},
 	Description: `The <info>{{.HelpName}}</> command dumps the shell completion script required
