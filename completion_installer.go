@@ -16,10 +16,10 @@ import (
 	"github.com/symfony-cli/terminal"
 )
 
-// completionTemplates holds our shell completions templates.
+// CompletionTemplates holds our shell completions templates.
 //
 //go:embed resources/completion.*
-var completionTemplates embed.FS
+var CompletionTemplates embed.FS
 
 var shellAutoCompleteInstallCommand = &Command{
 	Category: "self",
@@ -110,7 +110,7 @@ Add this to the end of your shell configuration file (e.g. <info>"{{ call .RcFil
 			shell = guessShell()
 		}
 
-		templates, err := template.ParseFS(completionTemplates, "resources/*")
+		templates, err := template.ParseFS(CompletionTemplates, "resources/*")
 		if err != nil {
 			return errors.WithStack(err)
 		}
