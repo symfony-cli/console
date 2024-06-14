@@ -62,11 +62,16 @@ func AutocompleteAppAction(c *Context) error {
 	}
 
 	// transpose registered commands and flags to posener/complete equivalence
-	for _, command := range c.App.VisibleCommands() {
+	for _, command := range c.App.Commands {
 		subCmd := command.convertToPosenerCompleteCommand(c)
 
-		for _, name := range command.Names() {
-			cmd.Sub[name] = subCmd
+		if command.Hidden == nil || !command.Hidden() {
+			cmd.Sub[command.FullName()] = subCmd
+		}
+		for _, alias := range command.Aliases {
+			if !alias.Hidden {
+				cmd.Sub[alias.String()] = subCmd
+			}
 		}
 	}
 

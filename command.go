@@ -70,8 +70,6 @@ type Command struct {
 	HelpName string
 	// The name used on the CLI by the user
 	UserName string
-
-	commandNamePath []string
 }
 
 func Hide() bool {
@@ -81,9 +79,6 @@ func Hide() bool {
 // FullName returns the full name of the command.
 // For subcommands this ensures that parent commands are part of the command path
 func (c *Command) FullName() string {
-	if c.commandNamePath != nil {
-		return strings.Join(c.commandNamePath, " ")
-	}
 	if c.Category != "" {
 		return strings.Join([]string{c.Category, c.Name}, ":")
 	}
@@ -164,12 +159,8 @@ func (c *Command) Run(ctx *Context) (err error) {
 
 // Names returns the names including short names and aliases.
 func (c *Command) Names() []string {
-	name := c.Name
-	if c.Category != "" {
-		name = c.Category + ":" + name
-	}
 	names := []string{}
-	if name != "" {
+	if name := c.FullName(); name != "" {
 		names = append(names, name)
 	}
 	for _, a := range c.Aliases {
