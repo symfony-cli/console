@@ -26,7 +26,7 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/posener/complete"
+	"github.com/posener/complete/v2"
 	"github.com/symfony-cli/terminal"
 )
 
@@ -100,7 +100,7 @@ func VerbosityFlag(name, alias, shortAlias string) *verbosityFlag {
 	}
 }
 
-func (f *verbosityFlag) PredictArgs(c *Context, a complete.Args) []string {
+func (f *verbosityFlag) PredictArgs(c *Context, prefix string) []string {
 	return []string{"1", "2", "3", "4"}
 }
 
@@ -167,26 +167,26 @@ func (f *verbosityFlag) String() string {
 	return fmt.Sprintf("<info>%s</>\t%s", names, strings.TrimSpace(usage))
 }
 
-func (f *verbosityFlag) addToPosenerFlags(c *Context, flags complete.Flags) {
+func (f *verbosityFlag) addToPosenerFlags(c *Context, flags map[string]complete.Predictor) {
 	for i, n := 1, len(terminal.LogLevels)-2; i <= n; i++ {
 		name := prefixFor(f.ShortAlias)
 		name += strings.Repeat(f.ShortAlias, i)
-		flags[name] = complete.PredictFunc(func(a complete.Args) []string {
-			return f.PredictArgs(c, a)
+		flags[name] = complete.PredictFunc(func(prefix string) []string {
+			return f.PredictArgs(c, prefix)
 		})
 	}
 
 	for _, alias := range f.Aliases {
 		if alias != "" {
-			flags[prefixFor(alias)+alias] = complete.PredictFunc(func(a complete.Args) []string {
-				return f.PredictArgs(c, a)
+			flags[prefixFor(alias)+alias] = complete.PredictFunc(func(prefix string) []string {
+				return f.PredictArgs(c, prefix)
 			})
 		}
 	}
 
 	if f.Name != "" {
-		flags[prefixFor(f.Name)+f.Name] = complete.PredictFunc(func(a complete.Args) []string {
-			return f.PredictArgs(c, a)
+		flags[prefixFor(f.Name)+f.Name] = complete.PredictFunc(func(prefix string) []string {
+			return f.PredictArgs(c, prefix)
 		})
 	}
 }
