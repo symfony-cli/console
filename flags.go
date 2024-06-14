@@ -23,6 +23,8 @@ import (
 	"flag"
 	"strconv"
 	"time"
+
+	"github.com/posener/complete"
 )
 
 // BoolFlag is a flag with type bool
@@ -35,7 +37,7 @@ type BoolFlag struct {
 	DefaultValue  bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, bool) error
 	Destination   *bool
 }
@@ -46,9 +48,9 @@ func (f *BoolFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *BoolFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *BoolFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{"true", "false"}
 }
@@ -96,7 +98,7 @@ type DurationFlag struct {
 	DefaultValue  time.Duration
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, time.Duration) error
 	Destination   *time.Duration
 }
@@ -107,9 +109,9 @@ func (f *DurationFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *DurationFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *DurationFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -157,7 +159,7 @@ type Float64Flag struct {
 	DefaultValue  float64
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, float64) error
 	Destination   *float64
 }
@@ -168,9 +170,9 @@ func (f *Float64Flag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *Float64Flag) PredictArgs(c *Context, prefix string) []string {
+func (f *Float64Flag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -217,7 +219,7 @@ type GenericFlag struct {
 	Hidden        bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, interface{}) error
 	Destination   Generic
 }
@@ -228,9 +230,9 @@ func (f *GenericFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *GenericFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *GenericFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -278,7 +280,7 @@ type Int64Flag struct {
 	DefaultValue  int64
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, int64) error
 	Destination   *int64
 }
@@ -289,9 +291,9 @@ func (f *Int64Flag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *Int64Flag) PredictArgs(c *Context, prefix string) []string {
+func (f *Int64Flag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -339,7 +341,7 @@ type IntFlag struct {
 	DefaultValue  int
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, int) error
 	Destination   *int
 }
@@ -350,9 +352,9 @@ func (f *IntFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *IntFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *IntFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -399,7 +401,7 @@ type IntSliceFlag struct {
 	Hidden        bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, []int) error
 	Destination   *IntSlice
 }
@@ -410,9 +412,9 @@ func (f *IntSliceFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *IntSliceFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *IntSliceFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -461,7 +463,7 @@ type Int64SliceFlag struct {
 	Hidden        bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, []int64) error
 	Destination   *Int64Slice
 }
@@ -472,9 +474,9 @@ func (f *Int64SliceFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *Int64SliceFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *Int64SliceFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -523,7 +525,7 @@ type Float64SliceFlag struct {
 	Hidden        bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, []float64) error
 	Destination   *Float64Slice
 }
@@ -534,9 +536,9 @@ func (f *Float64SliceFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *Float64SliceFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *Float64SliceFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -586,7 +588,7 @@ type StringFlag struct {
 	DefaultValue  string
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, string) error
 	Destination   *string
 }
@@ -597,9 +599,9 @@ func (f *StringFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *StringFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *StringFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -646,7 +648,7 @@ type StringSliceFlag struct {
 	Hidden        bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, []string) error
 	Destination   *StringSlice
 }
@@ -657,9 +659,9 @@ func (f *StringSliceFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *StringSliceFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *StringSliceFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -708,7 +710,7 @@ type StringMapFlag struct {
 	Hidden        bool
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, map[string]string) error
 	Destination   *StringMap
 }
@@ -719,9 +721,9 @@ func (f *StringMapFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *StringMapFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *StringMapFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -771,7 +773,7 @@ type Uint64Flag struct {
 	DefaultValue  uint64
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, uint64) error
 	Destination   *uint64
 }
@@ -782,9 +784,9 @@ func (f *Uint64Flag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *Uint64Flag) PredictArgs(c *Context, prefix string) []string {
+func (f *Uint64Flag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }
@@ -832,7 +834,7 @@ type UintFlag struct {
 	DefaultValue  uint
 	DefaultText   string
 	Required      bool
-	ArgsPredictor func(*Context, string) []string
+	ArgsPredictor func(*Context, complete.Args) []string
 	Validator     func(*Context, uint) error
 	Destination   *uint
 }
@@ -843,9 +845,9 @@ func (f *UintFlag) String() string {
 	return FlagStringer(f)
 }
 
-func (f *UintFlag) PredictArgs(c *Context, prefix string) []string {
+func (f *UintFlag) PredictArgs(c *Context, a complete.Args) []string {
 	if f.ArgsPredictor != nil {
-		return f.ArgsPredictor(c, prefix)
+		return f.ArgsPredictor(c, a)
 	}
 	return []string{}
 }

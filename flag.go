@@ -33,6 +33,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/posener/complete"
 	"github.com/symfony-cli/terminal"
 )
 
@@ -93,7 +94,7 @@ func (f FlagsByName) Swap(i, j int) {
 type Flag interface {
 	fmt.Stringer
 
-	PredictArgs(*Context, string) []string
+	PredictArgs(*Context, complete.Args) []string
 	Validate(*Context) error
 	// Apply Flag settings to the given flag set
 	Apply(*flag.FlagSet)
