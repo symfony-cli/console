@@ -8,3 +8,6 @@ const HasAutocompleteSupport = false
 func IsAutocomplete(c *Command) bool {
 	return false
 }
+
+func registerAutocompleteCommands(a *Application) {
+}
