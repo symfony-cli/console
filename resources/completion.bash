@@ -18,41 +18,7 @@
 # Bash completions for the CLI binary
 #
 # References:
-#   - https://github.com/symfony/symfony/blob/6.4/src/Symfony/Component/Console/Resources/completion.bash
 #   - https://github.com/posener/complete/blob/master/install/bash.go
-#   - https://github.com/scop/bash-completion/blob/master/completions/sudo
 #
 
-# this wrapper function allows us to let Symfony knows how to call the
-# `bin/console` using the Symfony CLI binary (to ensure the right env and PHP
-# versions are used)
-_{{ .App.HelpName }}_console() {
-  # shellcheck disable=SC2068
-  {{ .CurrentBinaryInvocation }} console $@
-}
-
-_complete_{{ .App.HelpName }}() {
-
-    # Use the default completion for shell redirect operators.
-    for w in '>' '>>' '&>' '<'; do
-        if [[ $w = "${COMP_WORDS[COMP_CWORD-1]}" ]]; then
-            compopt -o filenames
-            COMPREPLY=($(compgen -f -- "${COMP_WORDS[COMP_CWORD]}"))
-            return 0
-        fi
-    done
-
-    for (( i=1; i <= COMP_CWORD; i++ )); do
-        if [[ "${COMP_WORDS[i]}" != -* ]]; then
-            case "${COMP_WORDS[i]}" in
-                console|php|pecl|composer|run|local:run)
-                    _SF_CMD="_{{ .App.HelpName }}_console" _command_offset $i
-                    return
-            esac;
-        fi
-    done
-
-    IFS=$'\n' COMPREPLY=( $(COMP_LINE="${COMP_LINE}" COMP_POINT="${COMP_POINT}" COMP_DEBUG="$COMP_DEBUG" {{ .CurrentBinaryPath }} self:autocomplete) )
-}
-
-complete -F _complete_{{ .App.HelpName }} {{ .App.HelpName }}
+complete -C "{{ .CurrentBinaryPath }} self:autocomplete" {{ .App.HelpName }}
