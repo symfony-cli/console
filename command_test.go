@@ -23,6 +23,7 @@ import (
 	"errors"
 	"flag"
 	"io"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -144,5 +145,25 @@ func TestFuzzyCommandNames(t *testing.T) {
 	c = app.BestCommand("p:li")
 	if c != nil {
 		t.Fatalf("expected no matches, got %v", c)
+	}
+}
+
+func TestCommandWithNoNames(t *testing.T) {
+	c := Command{
+		Aliases: []*Alias{
+			{},
+			{Name: "foo"},
+			{Name: "bar"},
+		},
+	}
+
+	if got, expected := c.Names(), []string{"foo", "bar"}; len(got) != 2 {
+		t.Fatalf("expected two names, got %v", len(got))
+	} else if !reflect.DeepEqual(got, expected) {
+		t.Fatalf("expected %v, got %v", expected, got)
+	}
+
+	if name := c.PreferredName(); name != "foo, bar" {
+		t.Fatalf(`expected "foo, bar", got "%v"`, name)
 	}
 }

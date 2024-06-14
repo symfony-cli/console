@@ -92,14 +92,12 @@ func (c *Command) FullName() string {
 
 func (c *Command) PreferredName() string {
 	name := c.FullName()
-	if len(c.Names()) > 1 {
-		// first alias is what we prefer
-		name = c.Names()[1]
-	}
 	if name == "" && len(c.Aliases) > 0 {
 		names := []string{}
 		for _, a := range c.Aliases {
-			names = append(names, a.String())
+			if name := a.String(); name != "" {
+				names = append(names, a.String())
+			}
 		}
 		return strings.Join(names, ", ")
 	}
@@ -170,12 +168,19 @@ func (c *Command) Names() []string {
 	if c.Category != "" {
 		name = c.Category + ":" + name
 	}
-	names := []string{name}
+	names := []string{}
+	if name != "" {
+		names = append(names, name)
+	}
 	for _, a := range c.Aliases {
-		if !a.Hidden {
+		if a.Hidden {
+			continue
+		}
+		if name := a.String(); name != "" {
 			names = append(names, a.String())
 		}
 	}
+
 	return names
 }
 
