@@ -70,9 +70,9 @@ Add this to the end of your shell configuration file (e.g. <info>"{{ call .RcFil
 			CompletionFile func() string
 		}{
 			Command: command,
-			Shell:   guessShell,
+			Shell:   GuessShell,
 			RcFile: func() string {
-				switch guessShell() {
+				switch GuessShell() {
 				case "fish":
 					return "~/.config/fish/config.fish"
 				case "zsh":
@@ -82,7 +82,7 @@ Add this to the end of your shell configuration file (e.g. <info>"{{ call .RcFil
 				}
 			},
 			CompletionFile: func() string {
-				switch guessShell() {
+				switch GuessShell() {
 				case "fish":
 					return fmt.Sprintf("/etc/fish/completions/%s.fish", application.HelpName)
 				case "zsh":
@@ -107,7 +107,7 @@ Add this to the end of your shell configuration file (e.g. <info>"{{ call .RcFil
 	Action: func(c *Context) error {
 		shell := c.Args().Get("shell")
 		if shell == "" {
-			shell = guessShell()
+			shell = GuessShell()
 		}
 
 		templates, err := template.ParseFS(CompletionTemplates, "resources/*")
@@ -136,6 +136,6 @@ Add this to the end of your shell configuration file (e.g. <info>"{{ call .RcFil
 	},
 }
 
-func guessShell() string {
+func GuessShell() string {
 	return path.Base(os.Getenv("SHELL"))
 }
