@@ -237,6 +237,29 @@ func TestShowCommandHelp_CommandAliases(t *testing.T) {
 	}
 }
 
+func TestShowCommandHelp_CommandShortcut(t *testing.T) {
+	app := &Application{
+		Commands: []*Command{
+			{
+				Name:     "bar",
+				Category: "foo",
+				Aliases:  []*Alias{{Name: "fb"}},
+				Action: func(ctx *Context) error {
+					return nil
+				},
+			},
+		},
+	}
+
+	output := &bytes.Buffer{}
+	app.Writer = output
+	app.Run([]string{"foo", "help", "f:b"})
+
+	if !strings.Contains(output.String(), "foo:bar") {
+		t.Errorf("expected output to include command name; got: %q", output.String())
+	}
+}
+
 func TestShowCommandHelp_DescriptionFunc(t *testing.T) {
 	app := &Application{
 		Commands: []*Command{
