@@ -76,6 +76,15 @@ func Hide() bool {
 	return true
 }
 
+func (c *Command) normalizeCommandNames() {
+	c.Category = strings.ToLower(c.Category)
+	c.Name = strings.ToLower(c.Name)
+	c.HelpName = strings.ToLower(c.HelpName)
+	for _, alias := range c.Aliases {
+		alias.Name = strings.ToLower(alias.Name)
+	}
+}
+
 // FullName returns the full name of the command.
 // For subcommands this ensures that parent commands are part of the command path
 func (c *Command) FullName() string {

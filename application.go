@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"io"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -168,6 +169,7 @@ func (a *Application) Command(name string) *Command {
 // there is only one. Returns nil if the command does not exist of if the fuzzy
 // matching find more than one.
 func (a *Application) BestCommand(name string) *Command {
+	name = strings.ToLower(name)
 	if c := a.Command(name); c != nil {
 		return c
 	}
@@ -188,6 +190,7 @@ func (a *Application) BestCommand(name string) *Command {
 
 // Category returns the named CommandCategory on App. Returns nil if the category does not exist
 func (a *Application) Category(name string) *CommandCategory {
+	name = strings.ToLower(name)
 	if a.Categories == nil {
 		return nil
 	}
@@ -315,6 +318,7 @@ func (a *Application) setup() {
 	registerAutocompleteCommands(a)
 
 	for _, c := range a.Commands {
+		c.normalizeCommandNames()
 		if c.HelpName == "" {
 			c.HelpName = fmt.Sprintf("%s %s", a.HelpName, c.FullName())
 		}

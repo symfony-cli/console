@@ -112,6 +112,38 @@ func TestCommand_Run_DoesNotOverwriteErrorFromBefore(t *testing.T) {
 	}
 }
 
+func TestCaseInsensitiveCommandNames(t *testing.T) {
+	app := Application{}
+	app.ErrWriter = io.Discard
+	projectList := &Command{Name: "project:LIST", Aliases: []*Alias{{Name: "FOO"}}}
+	projectLink := &Command{Name: "PROJECT:link"}
+	app.Commands = []*Command{
+		projectList,
+		projectLink,
+	}
+
+	app.setup()
+
+	if c := app.BestCommand("project:list"); c != projectList {
+		t.Fatalf("expected project:list, got %v", c)
+	}
+	if c := app.BestCommand("Project:lISt"); c != projectList {
+		t.Fatalf("expected project:list, got %v", c)
+	}
+	if c := app.BestCommand("project:link"); c != projectLink {
+		t.Fatalf("expected project:link, got %v", c)
+	}
+	if c := app.BestCommand("project:Link"); c != projectLink {
+		t.Fatalf("expected project:link, got %v", c)
+	}
+	if c := app.BestCommand("foo"); c != projectList {
+		t.Fatalf("expected project:link, got %v", c)
+	}
+	if c := app.BestCommand("FoO"); c != projectList {
+		t.Fatalf("expected project:link, got %v", c)
+	}
+}
+
 func TestFuzzyCommandNames(t *testing.T) {
 	app := Application{}
 	app.ErrWriter = io.Discard
