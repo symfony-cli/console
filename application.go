@@ -85,8 +85,6 @@ func (a *Application) Run(arguments []string) (err error) {
 		a.setup()
 	})
 
-	checkWSL()
-
 	context := NewContext(a, nil, nil)
 	context.flagSet, err = a.parseArgs(arguments[1:])
 
