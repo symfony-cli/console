@@ -137,5 +137,9 @@ Add this to the end of your shell configuration file (e.g. <info>"{{ call .RcFil
 }
 
 func GuessShell() string {
-	return path.Base(os.Getenv("SHELL"))
+	if shell := os.Getenv("SHELL"); shell != "" {
+		return path.Base(shell)
+	}
+
+	return ""
 }
