@@ -136,8 +136,7 @@ func ShowAppHelpAction(c *Context) error {
 		return ShowCommandHelp(c, args.first())
 	}
 
-	ShowAppHelp(c)
-	return nil
+	return ShowAppHelp(c)
 }
 
 // ShowAppHelp is an action that displays the help.
@@ -259,11 +258,12 @@ func printHelp(out io.Writer, templ string, data interface{}) {
 	w := tabwriter.NewWriter(out, 1, 8, 2, ' ', 0)
 	t := template.Must(template.New("help").Funcs(funcMap).Parse(templ))
 
-	err := t.Execute(w, data)
-	if err != nil {
+	if err := t.Execute(w, data); err != nil {
 		panic(fmt.Errorf("CLI TEMPLATE ERROR: %#v", err.Error()))
 	}
-	w.Flush()
+	if err := w.Flush(); err != nil {
+		panic(fmt.Errorf("CLI TEMPLATE ERROR: %#v", err.Error()))
+	}
 }
 
 func checkVersion(c *Context) bool {
@@ -294,7 +294,7 @@ func checkHelp(c *Context) bool {
 
 func checkCommandHelp(c *Context, name string) bool {
 	if c.Bool("h") || c.Bool("help") {
-		ShowCommandHelp(c, name)
+		_ = ShowCommandHelp(c, name)
 		return true
 	}
 

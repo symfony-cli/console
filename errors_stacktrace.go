@@ -157,7 +157,7 @@ func FormatErrorChain(buf *bytes.Buffer, err error, trimPaths bool) bool {
 			if trimPaths {
 				file = trimGOPATH(fn.Name(), file)
 			}
-			buf.WriteString(fmt.Sprintf("%s\n\t<info>%s:%d</>", fn.Name(), file, line))
+			fmt.Fprintf(buf, "%s\n\t<info>%s:%d</>", fn.Name(), file, line)
 		}
 	}
 

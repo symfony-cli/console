@@ -127,7 +127,7 @@ func (c *Command) Run(ctx *Context) (err error) {
 		err = checkRequiredArgs(c, context)
 	}
 	if err != nil {
-		ShowCommandHelp(ctx, c.FullName())
+		_ = ShowCommandHelp(ctx, c.FullName())
 		fmt.Fprintln(ctx.App.Writer)
 		return IncorrectUsageError{err}
 	}
@@ -153,7 +153,7 @@ func (c *Command) Run(ctx *Context) (err error) {
 	if c.Before != nil {
 		err = c.Before(context)
 		if err != nil {
-			ShowCommandHelp(ctx, c.FullName())
+			_ = ShowCommandHelp(ctx, c.FullName())
 			HandleExitCoder(err)
 			return err
 		}
