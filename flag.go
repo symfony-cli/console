@@ -192,7 +192,7 @@ func (m *StringMap) String() string {
 
 // Serialized allows StringSlice to fulfill Serializeder
 func (m *StringMap) Serialized() string {
-	jsonBytes, _ := json.Marshal(m)
+	jsonBytes, _ := json.Marshal(m.m)
 	return fmt.Sprintf("%s%s", slPfx, string(jsonBytes))
 }
 

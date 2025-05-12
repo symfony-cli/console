@@ -52,7 +52,7 @@ func (cs *CommandSuite) TestCommandFlagParsing(c *C) {
 		app := &Application{}
 		app.setup()
 		set := flag.NewFlagSet("test", 0)
-		set.Parse(ca.testArgs)
+		c.Assert(set.Parse(ca.testArgs), IsNil)
 
 		context := NewContext(app, set, nil)
 
@@ -76,7 +76,7 @@ func (cs *CommandSuite) TestCommandFlagParsing(c *C) {
 		err := command.Run(context)
 
 		if ca.expectedErr == "" {
-			c.Assert(err, Equals, nil)
+			c.Assert(err, IsNil)
 		} else {
 			c.Assert(err, ErrorMatches, ca.expectedErr)
 		}

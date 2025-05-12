@@ -32,7 +32,9 @@ type LoggingFlagsSuite struct{}
 var _ = Suite(&LoggingFlagsSuite{})
 
 func (ts *LoggingFlagsSuite) TestLogLevel(c *C) {
-	defer terminal.SetLogLevel(1)
+	defer func() {
+		c.Assert(terminal.SetLogLevel(1), IsNil)
+	}()
 	value := &logLevelValue{}
 	var err error
 
@@ -58,7 +60,9 @@ func (ts *LoggingFlagsSuite) TestLogLevel(c *C) {
 }
 
 func (ts *LoggingFlagsSuite) TestLogLevelShortcuts(c *C) {
-	defer terminal.SetLogLevel(1)
+	defer func() {
+		c.Assert(terminal.SetLogLevel(1), IsNil)
+	}()
 	fs := flag.NewFlagSet("foo", flag.ExitOnError)
 	fs.Var(&logLevelValue{}, "log-level", "FooBar")
 

@@ -135,7 +135,7 @@ func parseFlagsFromEnv(prefixes []string, flags []Flag, fs *flag.FlagSet) {
 		envVariableNames := flagStringSliceField(f, "EnvVars")
 
 		for _, prefix := range prefixes {
-			envVariableNames = append(envVariableNames, strings.ToUpper(strings.Replace(fmt.Sprintf("%s_%s", prefix, fName), "-", "_", -1)))
+			envVariableNames = append(envVariableNames, strings.ToUpper(strings.ReplaceAll(fmt.Sprintf("%s_%s", prefix, fName), "-", "_")))
 		}
 
 		// reverse slice order

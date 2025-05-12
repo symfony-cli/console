@@ -96,7 +96,7 @@ func (a *Application) Run(arguments []string) (err error) {
 
 	if err != nil {
 		err = IncorrectUsageError{err}
-		ShowAppHelp(context)
+		_ = ShowAppHelp(context)
 		fmt.Fprintln(a.Writer)
 		HandleExitCoder(err)
 		return err
@@ -124,7 +124,7 @@ func (a *Application) Run(arguments []string) (err error) {
 		beforeErr := a.Before(context)
 		if beforeErr != nil {
 			fmt.Fprintf(a.Writer, "%v\n\n", beforeErr)
-			ShowAppHelp(context)
+			_ = ShowAppHelp(context)
 			HandleExitCoder(beforeErr)
 			err = beforeErr
 			return err
@@ -149,6 +149,15 @@ func (a *Application) Run(arguments []string) (err error) {
 	}
 	HandleExitCoder(err)
 	return err
+}
+
+// MustRun is the entry point to the CLI app. Parses the arguments slice and routes
+// to the proper flag/args combination. Under the hood it calls `Run` but will panic
+// if any error happen
+func (a *Application) MustRun(arguments []string) {
+	if err := a.Run(arguments); err != nil {
+		panic(err)
+	}
 }
 
 // Command returns the named command on App. Returns nil if the command does not

@@ -33,7 +33,9 @@ func Test_ShowAppHelp_NoAuthor(t *testing.T) {
 
 	c := NewContext(app, nil, nil)
 
-	ShowAppHelp(c)
+	if err := ShowAppHelp(c); err != nil {
+		t.Error(err)
+	}
 
 	if bytes.Contains(output.Bytes(), []byte("AUTHOR(S):")) {
 		t.Errorf("expected\n%snot to include %s", output.String(), "AUTHOR(S):")
@@ -48,7 +50,9 @@ func Test_ShowAppHelp_NoVersion(t *testing.T) {
 
 	c := NewContext(app, nil, nil)
 
-	ShowAppHelp(c)
+	if err := ShowAppHelp(c); err != nil {
+		t.Error(err)
+	}
 
 	if bytes.Contains(output.Bytes(), []byte("VERSION:")) {
 		t.Errorf("expected\n%snot to include %s", output.String(), "VERSION:")
@@ -80,7 +84,7 @@ func Test_Help_Custom_Flags(t *testing.T) {
 	}
 	output := new(bytes.Buffer)
 	app.Writer = output
-	app.Run([]string{"test", "-h"})
+	app.MustRun([]string{"test", "-h"})
 	if output.Len() > 0 {
 		t.Errorf("unexpected output: %s", output.String())
 	}
@@ -111,7 +115,7 @@ func Test_Version_Custom_Flags(t *testing.T) {
 	}
 	output := new(bytes.Buffer)
 	app.Writer = output
-	app.Run([]string{"test", "-V"})
+	app.MustRun([]string{"test", "-V"})
 	if output.Len() > 0 {
 		t.Errorf("unexpected output: %s", output.String())
 	}
@@ -122,7 +126,9 @@ func Test_helpCommand_Action_ErrorIfNoTopic(t *testing.T) {
 	app.Writer, app.ErrWriter = io.Discard, io.Discard
 
 	set := flag.NewFlagSet("test", 0)
-	set.Parse([]string{"foo"})
+	if err := set.Parse([]string{"foo"}); err != nil {
+		t.Error(err)
+	}
 
 	c := NewContext(app, set, nil)
 	app.setup()
@@ -151,7 +157,7 @@ func Test_helpCommand_InHelpOutput(t *testing.T) {
 	app := &Application{}
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"test", "--help"})
+	app.MustRun([]string{"test", "--help"})
 
 	s := output.String()
 
@@ -168,7 +174,7 @@ func Test_helpCategories(t *testing.T) {
 	app := &Application{}
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"help"})
+	app.MustRun([]string{"help"})
 
 	s := output.String()
 
@@ -177,7 +183,7 @@ func Test_helpCategories(t *testing.T) {
 	}
 
 	output.Reset()
-	app.Run([]string{"help", "self"})
+	app.MustRun([]string{"help", "self"})
 	s = output.String()
 
 	if !strings.Contains(s, "Available commands for the \"self\" namespace:") {
@@ -200,7 +206,7 @@ func TestShowAppHelp_CommandAliases(t *testing.T) {
 
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"foo", "--help"})
+	app.MustRun([]string{"foo", "--help"})
 
 	if !strings.Contains(output.String(), "<info>frobbly, fr, frob</>") {
 		t.Errorf("expected output to include all command aliases; got: %q", output.String())
@@ -226,7 +232,7 @@ func TestShowCommandHelp_CommandAliases(t *testing.T) {
 
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"foo", "help", "fr"})
+	app.MustRun([]string{"foo", "help", "fr"})
 
 	if !strings.Contains(output.String(), "frobbly") {
 		t.Errorf("expected output to include command name; got: %q", output.String())
@@ -253,7 +259,7 @@ func TestShowCommandHelp_CommandShortcut(t *testing.T) {
 
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"foo", "help", "f:b"})
+	app.MustRun([]string{"foo", "help", "f:b"})
 
 	if !strings.Contains(output.String(), "foo:bar") {
 		t.Errorf("expected output to include command name; got: %q", output.String())
@@ -278,7 +284,7 @@ func TestShowCommandHelp_DescriptionFunc(t *testing.T) {
 
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"foo", "help", "frobbly"})
+	app.MustRun([]string{"foo", "help", "frobbly"})
 
 	if !strings.Contains(output.String(), "this is my custom description") {
 		t.Errorf("expected output to include result of DescriptionFunc; got: %q", output.String())
@@ -306,7 +312,7 @@ func TestShowAppHelp_HiddenCommand(t *testing.T) {
 
 	output := &bytes.Buffer{}
 	app.Writer = output
-	app.Run([]string{"app", "--help"})
+	app.MustRun([]string{"app", "--help"})
 
 	if strings.Contains(output.String(), "secretfrob") {
 		t.Errorf("expected output to exclude \"secretfrob\"; got: %q", output.String())

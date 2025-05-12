@@ -25,6 +25,7 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"reflect"
 	"strings"
@@ -92,7 +93,9 @@ func ExampleApplication_Run() {
 		},
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 	// Output:
 	// Hello Jeremy
 }
@@ -115,7 +118,9 @@ func ExampleApplication_Run_quiet() {
 		},
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 	// Output:
 }
 
@@ -138,7 +143,9 @@ func ExampleApplication_Run_quietDisabled() {
 		},
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 	// Output:
 	// Hello Jeremy
 	// Byebye Jeremy
@@ -164,7 +171,9 @@ func (ts *ApplicationSuite) ExampleApplication_Run_quietInvalid(c *C) {
 		},
 	}
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 	c.Assert(stdout.String(), Equals, `Output:
 <info>greet</> version <comment>0.0.0</>
 A new cli application
@@ -217,7 +226,9 @@ func (ts *ApplicationSuite) ExampleApplication_Run_appHelp(c *C) {
 			},
 		},
 	}
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 	c.Assert(stdout.String(), Equals, `Output:
 <info>greet</> version <comment>0.1.0</>
 A new cli application
@@ -262,7 +273,9 @@ func ExampleApplication_Run_commandHelp() {
 			},
 		},
 	}
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		log.Fatal(err)
+	}
 	// Output:
 	// <comment>Description:</>
 	//   use it to see a description
@@ -341,7 +354,7 @@ func (ts *ApplicationSuite) TestApp_CommandWithFlagBeforeTerminator(c *C) {
 	}
 	app.Commands = []*Command{command}
 
-	app.Run([]string{"", "cmd", "--option", "my-option", "my-arg", "--", "--notARealFlag"})
+	c.Assert(app.Run([]string{"", "cmd", "--option", "my-option", "my-arg", "--", "--notARealFlag"}), IsNil)
 
 	c.Assert(parsedOption, Equals, "my-option")
 	c.Assert(args, NotNil)
@@ -366,7 +379,7 @@ func (ts *ApplicationSuite) TestApp_CommandWithDash(c *C) {
 	}
 	app.Commands = []*Command{command}
 
-	app.Run([]string{"", "cmd", "my-arg", "-"})
+	c.Assert(app.Run([]string{"", "cmd", "my-arg", "-"}), IsNil)
 	c.Assert(args, NotNil)
 	c.Assert(args.Len(), Equals, 2)
 	c.Assert(args.Get("first"), Equals, "my-arg")
@@ -390,8 +403,7 @@ func (ts *ApplicationSuite) TestApp_CommandWithNoFlagBeforeTerminator(c *C) {
 	}
 	app.Commands = []*Command{command}
 
-	app.Run([]string{"", "cmd", "my-arg", "--", "notAFlagAtAll"})
-
+	c.Assert(app.Run([]string{"", "cmd", "my-arg", "--", "notAFlagAtAll"}), IsNil)
 	c.Assert(args.Get("first"), Equals, "my-arg")
 	c.Assert(args.Get("second"), Equals, "notAFlagAtAll")
 }
@@ -465,7 +477,7 @@ func (ts *ApplicationSuite) TestApp_Float64Flag(c *C) {
 		},
 	}
 
-	app.Run([]string{"", "--height", "1.93"})
+	c.Assert(app.Run([]string{"", "--height", "1.93"}), IsNil)
 	c.Assert(meters, Equals, 1.93)
 }
 
@@ -493,7 +505,9 @@ func TestApp_ParseSliceFlags(t *testing.T) {
 	}
 	app.Commands = []*Command{command}
 
-	app.Run([]string{"", "cmd", "-p", "22", "-p", "80", "-ip", "8.8.8.8", "-ip", "8.8.4.4", "my-first-arg"})
+	if err := app.Run([]string{"", "cmd", "-p", "22", "-p", "80", "-ip", "8.8.8.8", "-ip", "8.8.4.4", "my-first-arg"}); err != nil {
+		t.Error(err)
+	}
 
 	IntsEquals := func(a, b []int) bool {
 		if len(a) != len(b) {
@@ -556,7 +570,9 @@ func TestApp_ParseSliceFlagsWithMissingValue(t *testing.T) {
 	}
 	app.Commands = []*Command{command}
 
-	app.Run([]string{"", "cmd", "-a", "2", "-str", "A", "my-arg"})
+	if err := app.Run([]string{"", "cmd", "-a", "2", "-str", "A", "my-arg"}); err != nil {
+		t.Error(err)
+	}
 
 	var expectedIntSlice = []int{2}
 	var expectedStringSlice = []string{"A"}
@@ -784,7 +800,9 @@ func TestAppHelpPrinter(t *testing.T) {
 	}
 
 	app := &Application{}
-	app.Run([]string{"-h"})
+	if err := app.Run([]string{"-h"}); err != nil {
+		t.Error(err)
+	}
 
 	if wasCalled == false {
 		t.Errorf("Help printer expected to be called, but was not")
@@ -1036,7 +1054,9 @@ func TestApp_Run_Categories(t *testing.T) {
 		versionCommand.Hidden = nil
 	}()
 
-	app.Run([]string{"categories"})
+	if err := app.Run([]string{"categories"}); err != nil {
+		t.Error(err)
+	}
 
 	expect := commandCategories([]*commandCategory{
 		{

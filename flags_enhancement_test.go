@@ -231,7 +231,9 @@ func (ts *CliEnhancementSuite) TestFixAndParseArgsApplication(c *C) {
 
 func (ts *CliEnhancementSuite) TestFixAndParseArgsApplicationVerbosityFlag(c *C) {
 	defaultLogLevel := terminal.GetLogLevel()
-	defer terminal.SetLogLevel(defaultLogLevel)
+	defer func() {
+		c.Assert(terminal.SetLogLevel(defaultLogLevel), IsNil)
+	}()
 
 	testApp := Application{
 		Flags: []Flag{

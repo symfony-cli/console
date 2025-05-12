@@ -68,10 +68,10 @@ func (r *logLevelShortcutValue) IsBoolFlag() bool { return true }
 
 func (r *logLevelShortcutValue) Set(s string) error {
 	if s != "" && s != "true" {
-		return r.set.Set(r.target, s)
+		return errors.WithStack(r.set.Set(r.target, s))
 	}
 
-	return r.set.Set(r.target, r.logLevel)
+	return errors.WithStack(r.set.Set(r.target, r.logLevel))
 }
 
 func (r *logLevelShortcutValue) String() string {

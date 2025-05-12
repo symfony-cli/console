@@ -148,7 +148,7 @@ func (cs *ContextSuite) TestContext_Args(c *C) {
 	set := flag.NewFlagSet("test", 0)
 	set.Bool("myflag", false, "doc")
 	ctx := NewContext(nil, set, nil)
-	set.Parse([]string{"--myflag", "bat", "baz"})
+	c.Assert(set.Parse([]string{"--myflag", "bat", "baz"}), IsNil)
 	c.Assert(ctx.Args().Len(), Equals, 2)
 	c.Assert(ctx.Bool("myflag"), Equals, true)
 }
@@ -157,7 +157,7 @@ func (cs *ContextSuite) TestContext_NArg(c *C) {
 	set := flag.NewFlagSet("test", 0)
 	set.Bool("myflag", false, "doc")
 	ctx := NewContext(nil, set, nil)
-	set.Parse([]string{"--myflag", "bat", "baz"})
+	c.Assert(set.Parse([]string{"--myflag", "bat", "baz"}), IsNil)
 	c.Assert(ctx.NArg(), Equals, 2)
 }
 
@@ -204,8 +204,8 @@ func (cs *ContextSuite) TestContext_IsSet(c *C) {
 	parentCtx := NewContext(nil, parentSet, nil)
 	ctx := NewContext(nil, set, parentCtx)
 
-	set.Parse([]string{"--one-flag", "--two-flag", "frob"})
-	parentSet.Parse([]string{"--top-flag"})
+	c.Assert(set.Parse([]string{"--one-flag", "--two-flag", "frob"}), IsNil)
+	c.Assert(parentSet.Parse([]string{"--top-flag"}), IsNil)
 
 	c.Assert(ctx.IsSet("one-flag"), Equals, true)
 	c.Assert(ctx.IsSet("two-flag"), Equals, true)
@@ -219,12 +219,14 @@ func (cs *ContextSuite) TestContext_Set(c *C) {
 	set.Int("int", 5, "an int")
 	ctx := NewContext(nil, set, nil)
 
-	ctx.Set("int", "1")
+	c.Assert(ctx.Set("int", "1"), IsNil)
 	c.Assert(ctx.Int("int"), Equals, 1)
 }
 
 func (cs *ContextSuite) TestContext_Set_AppFlags(c *C) {
-	defer terminal.SetLogLevel(1)
+	defer func() {
+		c.Assert(terminal.SetLogLevel(1), IsNil)
+	}()
 
 	app := &Application{
 		Commands: []*Command{
@@ -239,7 +241,7 @@ func (cs *ContextSuite) TestContext_Set_AppFlags(c *C) {
 			},
 		},
 	}
-	app.Run([]string{"cmd", "foo"})
+	app.MustRun([]string{"cmd", "foo"})
 }
 
 func (cs *ContextSuite) TestContext_Lineage(c *C) {
@@ -249,8 +251,8 @@ func (cs *ContextSuite) TestContext_Lineage(c *C) {
 	parentSet.Bool("top-flag", true, "doc")
 	parentCtx := NewContext(nil, parentSet, nil)
 	ctx := NewContext(nil, set, parentCtx)
-	set.Parse([]string{"--local-flag"})
-	parentSet.Parse([]string{"--top-flag"})
+	c.Assert(set.Parse([]string{"--local-flag"}), IsNil)
+	c.Assert(parentSet.Parse([]string{"--top-flag"}), IsNil)
 
 	lineage := ctx.Lineage()
 	c.Assert(len(lineage), Equals, 2)
@@ -265,8 +267,8 @@ func (cs *ContextSuite) TestContext_lookupFlagSet(c *C) {
 	parentSet.Bool("top-flag", true, "doc")
 	parentCtx := NewContext(nil, parentSet, nil)
 	ctx := NewContext(nil, set, parentCtx)
-	set.Parse([]string{"--local-flag"})
-	parentSet.Parse([]string{"--top-flag"})
+	c.Assert(set.Parse([]string{"--local-flag"}), IsNil)
+	c.Assert(parentSet.Parse([]string{"--top-flag"}), IsNil)
 
 	fs := lookupFlagSet("top-flag", ctx)
 	c.Assert(fs, Equals, parentCtx.flagSet)

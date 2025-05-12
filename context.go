@@ -22,6 +22,8 @@ package console
 import (
 	"flag"
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
 // Context is a type that is passed through to
@@ -45,7 +47,7 @@ func NewContext(app *Application, set *flag.FlagSet, parentCtx *Context) *Contex
 // Set assigns a value to a context flag.
 func (c *Context) Set(name, value string) error {
 	if fs := lookupFlagSet(name, c); fs != nil {
-		return fs.Set(name, value)
+		return errors.WithStack(fs.Set(name, value))
 	}
 
 	return fmt.Errorf("no such flag -%v", name)
