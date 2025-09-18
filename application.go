@@ -117,7 +117,11 @@ func (a *Application) Run(arguments []string) (err error) {
 	args := context.Args()
 	if args.Present() {
 		name := args.first()
-		context.Command = a.BestCommand(name)
+		context.Command, err = a.BestCommand(name)
+		if err != nil {
+			HandleExitCoder(err)
+			return err
+		}
 	}
 
 	if a.Before != nil {
@@ -175,10 +179,10 @@ func (a *Application) Command(name string) *Command {
 // BestCommand returns the named command on App or a command fuzzy matching if
 // there is only one. Returns nil if the command does not exist of if the fuzzy
 // matching find more than one.
-func (a *Application) BestCommand(name string) *Command {
+func (a *Application) BestCommand(name string) (*Command, error) {
 	name = strings.ToLower(name)
 	if c := a.Command(name); c != nil {
-		return c
+		return c, nil
 	}
 
 	// fuzzy match?
@@ -190,9 +194,15 @@ func (a *Application) BestCommand(name string) *Command {
 	}
 	if len(matches) == 1 {
 		matches[0].UserName = name
-		return matches[0]
+		return matches[0], nil
+	} else if len(matches) > 1 {
+		suggestions := ""
+		for _, m := range matches {
+			suggestions += fmt.Sprintf("\n    %s", m.FullName())
+		}
+		return nil, fmt.Errorf("Command \"%s\" is ambiguous.\nDid you mean one of these?\n%s", name, suggestions)
 	}
-	return nil
+	return nil, nil
 }
 
 // Category returns the named CommandCategory on App. Returns nil if the category does not exist

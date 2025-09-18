@@ -124,22 +124,22 @@ func TestCaseInsensitiveCommandNames(t *testing.T) {
 
 	app.setup()
 
-	if c := app.BestCommand("project:list"); c != projectList {
+	if c, _ := app.BestCommand("project:list"); c != projectList {
 		t.Fatalf("expected project:list, got %v", c)
 	}
-	if c := app.BestCommand("Project:lISt"); c != projectList {
+	if c, _ := app.BestCommand("Project:lISt"); c != projectList {
 		t.Fatalf("expected project:list, got %v", c)
 	}
-	if c := app.BestCommand("project:link"); c != projectLink {
+	if c, _ := app.BestCommand("project:link"); c != projectLink {
 		t.Fatalf("expected project:link, got %v", c)
 	}
-	if c := app.BestCommand("project:Link"); c != projectLink {
+	if c, _ := app.BestCommand("project:Link"); c != projectLink {
 		t.Fatalf("expected project:link, got %v", c)
 	}
-	if c := app.BestCommand("foo"); c != projectList {
+	if c, _ := app.BestCommand("foo"); c != projectList {
 		t.Fatalf("expected project:link, got %v", c)
 	}
-	if c := app.BestCommand("FoO"); c != projectList {
+	if c, _ := app.BestCommand("FoO"); c != projectList {
 		t.Fatalf("expected project:link, got %v", c)
 	}
 }
@@ -154,29 +154,35 @@ func TestFuzzyCommandNames(t *testing.T) {
 		projectLink,
 	}
 
-	c := app.BestCommand("project:list")
+	c, _ := app.BestCommand("project:list")
 	if c != projectList {
 		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.BestCommand("project:link")
+	c, _ = app.BestCommand("project:link")
 	if c != projectLink {
 		t.Fatalf("expected project:link, got %v", c)
 	}
-	c = app.BestCommand("pro:list")
+	c, _ = app.BestCommand("pro:list")
 	if c != projectList {
 		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.BestCommand("pro:lis")
+	c, _ = app.BestCommand("pro:lis")
 	if c != projectList {
 		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.BestCommand("p:lis")
+	c, _ = app.BestCommand("p:lis")
 	if c != projectList {
 		t.Fatalf("expected project:list, got %v", c)
 	}
-	c = app.BestCommand("p:li")
+	c, err := app.BestCommand("p:li")
 	if c != nil {
 		t.Fatalf("expected no matches, got %v", c)
+	}
+	if err == nil {
+		t.Fatal("expected an error message, got none")
+	}
+	if !strings.Contains(err.Error(), `Command "p:li" is ambiguous`) {
+		t.Fatalf("error message does not match, got %v", err.Error())
 	}
 }
 
