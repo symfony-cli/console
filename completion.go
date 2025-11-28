@@ -63,6 +63,10 @@ func AutocompleteAppAction(c *Context) error {
 
 	// transpose registered commands and flags to posener/complete equivalence
 	for _, command := range c.App.Commands {
+		// skip the completion commands itself
+		if command == shellAutoCompleteInstallCommand {
+			continue
+		}
 		subCmd := command.convertToPosenerCompleteCommand(c)
 
 		if command.Hidden == nil || !command.Hidden() {
