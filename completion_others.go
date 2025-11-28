@@ -1,5 +1,4 @@
 //go:build !darwin && !linux && !freebsd && !openbsd
-// +build !darwin,!linux,!freebsd,!openbsd
 
 package console
 
