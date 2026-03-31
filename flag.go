@@ -185,7 +185,7 @@ func (m *StringMap) String() string {
 	}
 	sort.Strings(keys)
 	for _, key := range keys {
-		buffer.WriteString(fmt.Sprintf(`"%s=%s", `, key, m.m[key]))
+		fmt.Fprintf(&buffer, `"%s=%s", `, key, m.m[key])
 	}
 	return strings.Trim(buffer.String(), ", ")
 }
